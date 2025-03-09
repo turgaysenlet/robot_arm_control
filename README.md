@@ -8,7 +8,7 @@ A Python application for controlling the EEZYbotARM MK2 robot arm using a PS4 co
 - PS4 controller integration for intuitive robot arm control
 - Real-time servo angle visualization using circular gauges
 - Emergency stop functionality
-- Clean and modern PyQt6-based user interface
+- Clean and modern PyQt5-based user interface
 
 ## Hardware Requirements
 

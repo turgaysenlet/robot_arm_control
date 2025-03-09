@@ -1,5 +1,5 @@
 import pygame
-from PyQt6.QtCore import QObject, pyqtSignal, QTimer
+from PyQt5.QtCore import QObject, pyqtSignal, QTimer
 import time
 
 class PS4Controller(QObject):
