@@ -48,6 +48,48 @@ class CameraThread(QThread):
             self.cap.release()
         self.quit()
 
+class CameraManager:
+     def __init__(self):
+         self.available_cameras = self._get_available_cameras()
+         self.active_cameras = {}
+ 
+     def _get_available_cameras(self):
+         """Find all available cameras."""
+         available = []
+         for i in range(10):  # Check first 10 indexes
+             try:
+                 cap = cv2.VideoCapture(i)
+                 if cap.isOpened():
+                     available.append(i)
+                 cap.release()
+             except:
+                 continue
+         return available
+ 
+     def start_camera(self, camera_id):
+         """Start a camera stream."""
+         if camera_id not in self.active_cameras:
+             camera_thread = CameraThread(camera_id)
+             self.active_cameras[camera_id] = camera_thread
+             camera_thread.start()
+             return camera_thread
+         return self.active_cameras[camera_id]
+ 
+     def stop_camera(self, camera_id):
+         """Stop a camera stream."""
+         if camera_id in self.active_cameras:
+             self.active_cameras[camera_id].stop()
+             del self.active_cameras[camera_id]
+ 
+     def stop_all_cameras(self):
+         """Stop all active camera streams."""
+         for camera_id in list(self.active_cameras.keys()):
+             self.stop_camera(camera_id)
+ 
+     def get_available_cameras(self):
+         """Return list of available camera indices."""
+         return self.available_cameras 
+
 if __name__ == "__main__":
     manager = CameraManager()
     print("Detected Cameras:", manager.get_available_cameras())
