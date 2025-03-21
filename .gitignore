@@ -1,2 +1,6 @@
 .DS_Store
 venv/
+__pycache__/camera_manager.cpython-311.pyc
+__pycache__/
+__pycache__/controller.cpython-311.pyc
+__pycache__/maestro_controller.cpython-311.pyc
