@@ -18,7 +18,7 @@ class CameraThread(QThread):
         self.running = True
 
         # Try different backends in case some fail
-        backends = [cv2.CAP_DSHOW, cv2.CAP_MSMF, cv2.CAP_VFW]  # Windows preferred order
+        backends = [cv2.CAP_DSHOW] #, cv2.CAP_MSMF, cv2.CAP_VFW]  # Windows preferred order
         for backend in backends:
             self.cap = cv2.VideoCapture(self.camera_index, backend)
             if self.cap.isOpened():
@@ -58,7 +58,7 @@ class CameraManager:
          available = []
          for i in range(10):  # Check first 10 indexes
              try:
-                 cap = cv2.VideoCapture(i)
+                 cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
                  if cap.isOpened():
                      available.append(i)
                  cap.release()

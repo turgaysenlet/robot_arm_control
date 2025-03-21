@@ -45,7 +45,7 @@ class RobotArmControlUI(QMainWindow):
         self.desired_angles = {'base': 90, 'shoulder': 90, 'elbow': 90, 'gripper': 90}
 
         try:
-            self.servo_controller = MaestroController(port='COM3')  # Change COM port if needed
+            self.servo_controller = MaestroController(port='COM12')  # Change COM port if needed
         except Exception as e:
             print(f"Error initializing Maestro controller: {e}")
             self.servo_controller = None
