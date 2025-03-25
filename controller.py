@@ -19,7 +19,7 @@ class PS4Controller(QObject):
         self.connect()
         
         # Control settings
-        self.angle_increment = 2  # degrees per update
+        self.speed_multiplier = 5.0  # Increased from 2 to 5 degrees per update
         self.update_rate = 50  # milliseconds
         
         # Setup timer for polling
@@ -81,6 +81,15 @@ class PS4Controller(QObject):
         # Emit control updates
         self.control_updated.emit(changes)
 
+    def set_speed_multiplier(self, value):
+        """Set the speed multiplier for servo movements."""
+        self.speed_multiplier = max(0.1, min(20.0, float(value)))
+        print(f"Speed multiplier set to: {self.speed_multiplier}")
+
+    def get_speed_multiplier(self):
+        """Get the current speed multiplier."""
+        return self.speed_multiplier
+
     def get_controls(self):
         """
         Get current control values for robot arm.
@@ -108,17 +117,17 @@ class PS4Controller(QObject):
             # Base rotation (left/right on left stick)
             if 0 in self.axis_data:
                 if abs(self.axis_data[0]) > 0.1:  # Dead zone
-                    changes['base'] = self.angle_increment * -self.axis_data[0]  # Invert for intuitive control
+                    changes['base'] = self.speed_multiplier * -self.axis_data[0]
 
             # Shoulder (up/down on right stick)
             if 3 in self.axis_data:
                 if abs(self.axis_data[3]) > 0.1:
-                    changes['shoulder'] = self.angle_increment * self.axis_data[3]  # Remove negative
+                    changes['shoulder'] = self.speed_multiplier * self.axis_data[3]
 
             # Elbow (up/down on left stick)
             if 1 in self.axis_data:
                 if abs(self.axis_data[1]) > 0.1:
-                    changes['elbow'] = self.angle_increment * self.axis_data[1]  # Remove negative
+                    changes['elbow'] = self.speed_multiplier * self.axis_data[1]
 
             # Gripper (L2/R2 triggers)
             # L2 closes (-1 to 1), R2 opens (-1 to 1)
@@ -129,7 +138,7 @@ class PS4Controller(QObject):
             l2_mapped = (l2 + 1) / 2
             r2_mapped = (r2 + 1) / 2
             
-            gripper_change = (r2_mapped - l2_mapped) * self.angle_increment
+            gripper_change = (r2_mapped - l2_mapped) * self.speed_multiplier
             changes['gripper'] = gripper_change
 
         except Exception as e:

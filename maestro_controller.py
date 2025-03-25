@@ -15,8 +15,8 @@ class MaestroController:
         self.GRIPPER_CHANNEL = 3
         
         # Define servo limits (in microseconds)
-        self.SERVO_MIN = 4000  # Typically ~4000 for 0 degrees
-        self.SERVO_MAX = 8000  # Typically ~8000 for 180 degrees
+        self.SERVO_MIN = 2000  # Typically ~4000 for 0 degrees
+        self.SERVO_MAX = 10000  # Typically ~8000 for 180 degrees
         
         # Current angles
         self.current_angles = {
@@ -58,11 +58,11 @@ class MaestroController:
     def set_angle(self, servo_name, angle):
         """Set servo angle (0-180 degrees)."""
         # Ensure angle is within bounds
-        angle = max(0, min(180, angle))
+        angle = max(0, min(360, angle))
         
         # Map angle to servo range
         target = int(self.SERVO_MIN + (angle / 180.0) * (self.SERVO_MAX - self.SERVO_MIN))
-        
+        print("Target: ", target)
         # Determine channel based on servo name
         channel_map = {
             'base': self.BASE_CHANNEL,
